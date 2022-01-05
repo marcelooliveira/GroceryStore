@@ -22,6 +22,7 @@ services:
     depends_on:
       - rabbitmq
       - elasticsearch
+      - ecommerce.data
 
   catalog.api:
     image: ${DOCKER_REGISTRY-}catalogapi
