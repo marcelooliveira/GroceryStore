@@ -15,6 +15,12 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "http://host.docker.internal:5107/hc-ui",
+      "publishAllPorts": true
     }
   }
 }
