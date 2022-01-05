@@ -11,6 +11,9 @@ services:
   elasticsearch:
     image: nshou/elasticsearch-kibana
 
+  sql.data:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+
   ecommerce.data:
     image: redis:alpine
 
@@ -32,6 +35,15 @@ services:
     depends_on:
       - rabbitmq
       - elasticsearch
+
+  ordering.api:
+    image: ${DOCKER_REGISTRY-}orderingapi
+    build:
+      context: .
+      dockerfile: Services/Ordering.API/Dockerfile
+    depends_on:
+      - sql.data
+      - rabbitmq
 
   identity.api:
     image: ${DOCKER_REGISTRY-}identityapi
