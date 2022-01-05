@@ -229,7 +229,7 @@ namespace MVC
             app.UseStaticFiles();
             app.UseCookiePolicy(new CookiePolicyOptions
             {
-                MinimumSameSitePolicy = SameSiteMode.Strict
+                MinimumSameSitePolicy = SameSiteMode.Unspecified
             });
 
             app.UseSession();
