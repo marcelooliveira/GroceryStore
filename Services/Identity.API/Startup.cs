@@ -102,12 +102,12 @@ namespace Identity.API
 
             builder.Services.ConfigureExternalCookie(options => {
                 options.Cookie.IsEssential = true;
-                options.Cookie.SameSite = (SameSiteMode)(-1); //SameSiteMode.Unspecified in .NET Core 3.1
+                options.Cookie.SameSite = SameSiteMode.Lax;
             });
 
             builder.Services.ConfigureApplicationCookie(options => {
                 options.Cookie.IsEssential = true;
-                options.Cookie.SameSite = (SameSiteMode)(-1); //SameSiteMode.Unspecified in .NET Core 3.1
+                options.Cookie.SameSite = SameSiteMode.Lax;
             });
 
             if (Environment.IsDevelopment())

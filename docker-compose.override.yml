@@ -22,13 +22,15 @@ services:
   basket.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - IdentityUrl=http://10.0.75.1:5105
+      - ASPNETCORE_URLS=http://0.0.0.0:80;http://0.0.0.0:443
+      - IdentityUrl=http://host.docker.internal:5105/
       - RedisConnectionString=ecommerce.data:6379
       - RabbitMQConnectionString=amqp://rabbitmq
       - ELASTICSEARCH_URL=http://10.0.75.1:9200
       - SignalRServerUrl=http://10.0.75.1:5100/
     ports:
       - "5103:80"
+      - "5203:443"
 
   catalog.api:
     environment:
@@ -44,12 +46,13 @@ services:
   identity.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://0.0.0.0:80
-      - CallBackUrl=http://localhost:5100/
+      - ASPNETCORE_URLS=http://0.0.0.0:80;http://0.0.0.0:443
+      - CallBackUrl=http://host.docker.internal:5100/
       - RabbitMQConnectionString=amqp://rabbitmq
       - ELASTICSEARCH_URL=http://10.0.75.1:9200
     ports:
       - "5105:80"
+      - "5205:443"
     volumes:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
@@ -57,23 +60,25 @@ services:
   mvc:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80;http://0.0.0.0:443
       - CatalogUrl=http://catalog.api/
-      - IdentityUrl=http://10.0.75.1:5105/
+      - IdentityUrl=http://host.docker.internal:5105/
       - BasketUrl=http://basket.api/
       - OrderingUrl=http://ordering.api/
-      - CallBackUrl=http://localhost:5100/
+      - CallBackUrl=http://host.docker.internal:5100/
       - SignalRServerUrl=http://mvc/
       - RedisConnectionString=ecommerce.data:6379
       - ELASTICSEARCH_URL=http://10.0.75.1:9200
     ports:
       - "5100:80"
+      - "5200:443"
 
   webstatus:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:80
       - HealthChecks-UI__HealthChecks__1__Name=Basket HTTP Check
-      - HealthChecks-UI__HealthChecks__1__Uri=http://basket.api/hc
+      - HealthChecks-UI__HealthChecks__1__Uri=http://host.docker.internal:5103/hc
       - HealthChecks-UI__HealthChecks__2__Name=Catalog HTTP Check
       - HealthChecks-UI__HealthChecks__2__Uri=http://catalog.api/hc
       - HealthChecks-UI__HealthChecks__3__Name=MVC HTTP Check
