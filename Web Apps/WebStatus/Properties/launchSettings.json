@@ -11,7 +11,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "hc-ui",
+      "launchUrl": "healthchecks-ui",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -19,7 +19,7 @@
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
-      "launchUrl": "http://host.docker.internal:5107/hc-ui",
+      "launchUrl": "http://host.docker.internal:5107/healthchecks-ui",
       "publishAllPorts": true
     }
   }

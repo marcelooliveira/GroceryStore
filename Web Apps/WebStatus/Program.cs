@@ -22,7 +22,6 @@ namespace Status
         {
             return
                 WebHost.CreateDefaultBuilder(args)
-                .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .Build();
         }
