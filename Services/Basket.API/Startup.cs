@@ -6,23 +6,18 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json.Serialization;
 using RabbitMQ.Client;
 using Rebus.Config;
-using Rebus.ServiceProvider;
 using Serilog;
 using StackExchange.Redis;
-using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
 using System.Reflection;
@@ -132,13 +127,6 @@ namespace Basket.API
 
             services.AddTransient<IBasketRepository, RedisBasketRepository>();
             services.AddTransient<IIdentityService, IdentityService>();
-            //services.AddHealthChecks()
-            //    .AddCheck("self", () => HealthCheckResult.Healthy())
-            //    .AddRedis(
-            //        Configuration["RedisConnectionString"],
-            //        name: "redis-check",
-            //        tags: new string[] { "redis" })
-            //    .AddRabbitMQ(Configuration["RabbitMQConnectionString"], HealthStatus.Healthy);
 
             services
                 .AddSingleton<IConnection>(sp =>
@@ -169,7 +157,6 @@ namespace Basket.API
         {
             // Configure and register Rebus
             services.AddRebus(configure => configure
-                //.Logging(l => l.Use(new MSLoggerFactoryAdapter(_loggerFactory)))
                 .Transport(t => t.UseRabbitMq(Configuration["RabbitMQConnectionString"], Configuration["RabbitMQInputQueueName"])));
         }
 
