@@ -14,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Ordering.API.SignalR;
 using Ordering.Commands;
 using Ordering.Repositories;
@@ -158,6 +160,11 @@ namespace Ordering
             services.AddMediatR(typeof(CreateOrderCommand).GetTypeInfo().Assembly);
             RegisterRebus(services);
 
+            services.AddOpenTelemetryTracing(builder =>
+                builder
+                .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Identity.API"))
+                .AddAspNetCoreInstrumentation()
+                .AddJaegerExporter());
         }
 
         private void RegisterRebus(IServiceCollection services)

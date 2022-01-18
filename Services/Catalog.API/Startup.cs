@@ -19,6 +19,8 @@ using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.Swagger;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace Catalog.API
 {
@@ -94,6 +96,12 @@ namespace Catalog.API
             {
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddOpenTelemetryTracing(builder =>
+                builder
+                .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Catalog.API"))
+                .AddAspNetCoreInstrumentation()
+                .AddJaegerExporter());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

@@ -32,6 +32,10 @@ using System.Net.Http;
 using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Jaeger;
+using Jaeger.Samplers;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace MVC
 {
@@ -198,6 +202,12 @@ namespace MVC
             services.AddHttpClient<IOrderService, OrderService>()
                    .AddPolicyHandler(GetRetryPolicy())
                    .AddPolicyHandler(GetCircuitBreakerPolicy());
+
+            services.AddOpenTelemetryTracing(builder =>
+                builder
+                .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("MVC"))
+                .AddAspNetCoreInstrumentation()
+                .AddJaegerExporter());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

@@ -14,6 +14,8 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using RabbitMQ.Client;
 using Rebus.Config;
 using Serilog;
@@ -151,6 +153,12 @@ namespace Basket.API
             containerBuilder.Populate(services);
 
             ConfigureRebus(services);
+
+            services.AddOpenTelemetryTracing(builder =>
+                builder
+                .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Basket.API"))
+                .AddAspNetCoreInstrumentation()
+                .AddJaegerExporter());
         }
 
         private void ConfigureRebus(IServiceCollection services)

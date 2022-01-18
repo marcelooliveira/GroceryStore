@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Models.ViewModels;
 using MVC;
+using OpenTracing;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace Services
 
         public OrderService(IConfiguration configuration
             , HttpClient httpClient
-            , ISessionHelper sessionHelper) 
+            , ISessionHelper sessionHelper)
             : base(configuration, httpClient, sessionHelper)
         {
             this.configuration = configuration;

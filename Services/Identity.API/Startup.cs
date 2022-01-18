@@ -24,6 +24,8 @@ using Serilog;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace Identity.API
 {
@@ -129,6 +131,12 @@ namespace Identity.API
             services.AddMediatR(typeof(RegistrationCommand).GetTypeInfo().Assembly);
 
             RegisterRebus(services);
+
+            services.AddOpenTelemetryTracing(builder =>
+                builder
+                .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Identity.API"))
+                .AddAspNetCoreInstrumentation()
+                .AddJaegerExporter());
         }
 
         private void RegisterRebus(IServiceCollection services)

@@ -20,6 +20,7 @@
     <PackageReference Include="IdentityServer4.EntityFramework" Version="3.1.4" />
     <PackageReference Include="IdentityServer4.EntityFramework.Storage" Version="3.1.4" />
     <PackageReference Include="IdentityServer4.Storage" Version="3.1.4" />
+    <PackageReference Include="Jaeger" Version="1.0.3" />
     <PackageReference Include="MediatR" Version="5.1.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="5.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.HealthChecks" Version="1.0.0" />
@@ -29,6 +30,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
+    <PackageReference Include="OpenTelemetry" Version="1.2.0-rc1" />
+    <PackageReference Include="OpenTelemetry.Api" Version="1.2.0-rc1" />
+    <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.2.0-rc1" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc8" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc8" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc8" />
+    <PackageReference Include="OpenTracing" Version="0.12.1" />
+    <PackageReference Include="OpenTracing.Contrib.NetCore" Version="0.6.2" />
     <PackageReference Include="Rebus" Version="5.0.1" />
     <PackageReference Include="Rebus.RabbitMq" Version="4.4.2" />
     <PackageReference Include="Rebus.ServiceProvider" Version="4.0.1" />
