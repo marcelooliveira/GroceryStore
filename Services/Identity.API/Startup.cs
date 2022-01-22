@@ -136,6 +136,7 @@ namespace Identity.API
                 builder
                 .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Identity.API"))
                 .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
                 .AddJaegerExporter());
         }
 

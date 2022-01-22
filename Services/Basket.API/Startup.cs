@@ -158,6 +158,7 @@ namespace Basket.API
                 builder
                 .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Basket.API"))
                 .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
                 .AddJaegerExporter());
         }
 

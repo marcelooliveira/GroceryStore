@@ -164,6 +164,7 @@ namespace Ordering
                 builder
                 .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Identity.API"))
                 .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
                 .AddJaegerExporter());
         }
 

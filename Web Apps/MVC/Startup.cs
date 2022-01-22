@@ -207,6 +207,16 @@ namespace MVC
                 builder
                 .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("MVC"))
                 .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation(
+                    // we can hook into existing activities and customize them
+                    options => options.Enrich = (activity, eventName, rawObject) =>
+                    {
+                        if (eventName == "OnStartActivity" && rawObject is System.Net.Http.HttpRequestMessage request)
+                        {
+                            activity.SetTag("RandomDemoTag", "Adding some random demo tag, just to see things working");
+                        }
+                    }
+                )
                 .AddJaegerExporter());
         }
 

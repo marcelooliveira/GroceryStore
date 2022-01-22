@@ -101,6 +101,7 @@ namespace Catalog.API
                 builder
                 .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Catalog.API"))
                 .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
                 .AddJaegerExporter());
         }
 
