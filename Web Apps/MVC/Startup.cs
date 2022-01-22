@@ -101,13 +101,15 @@ namespace MVC
             //and then creating the connection it seems reasonable to move
             //that cost to startup instead of having the first request pay the
             //penalty.
+            ConnectionMultiplexer redisConnection = null;
             services.AddSingleton<IConnectionMultiplexer>(sp =>
             {
                 var configuration = ConfigurationOptions.Parse(Configuration["RedisConnectionString"], true);
 
                 configuration.ResolveDns = true;
 
-                return ConnectionMultiplexer.Connect(configuration);
+                redisConnection = ConnectionMultiplexer.Connect(configuration);
+                return redisConnection;
             });
             services.AddAuthorization();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -217,6 +219,7 @@ namespace MVC
                         }
                     }
                 )
+                .AddRedisInstrumentation(redisConnection)
                 .AddJaegerExporter());
         }
 

@@ -125,6 +125,7 @@ namespace Basket.API
             //and then creating the connection it seems reasonable to move
             //that cost to startup instead of having the first request pay the
             //penalty.
+            ConnectionMultiplexer redisConnection = null;
             services.AddSingleton<IConnectionMultiplexer>(sp =>
             {
                 var settings = sp.GetRequiredService<IOptions<BasketConfig>>().Value;
@@ -132,7 +133,8 @@ namespace Basket.API
 
                 configuration.ResolveDns = true;
 
-                return ConnectionMultiplexer.Connect(configuration);
+                redisConnection = ConnectionMultiplexer.Connect(configuration);
+                return redisConnection;
             });
 
             services.AddTransient<IBasketRepository, RedisBasketRepository>();
@@ -168,6 +170,7 @@ namespace Basket.API
                 .AddAspNetCoreInstrumentation()
                 .AddHttpClientInstrumentation()
                 .AddRebusInstrumentation()
+                .AddRedisInstrumentation(redisConnection)
                 .AddJaegerExporter());
 
         }
