@@ -14,15 +14,23 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using RabbitMQ.Client;
+using Rebus.Activation;
+using Rebus.Bus;
 using Rebus.Config;
+using Rebus.Logging;
+using Rebus.OpenTelemetry.Configuration;
+using Rebus.Retry.Simple;
 using Serilog;
 using StackExchange.Redis;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Basket.API
 {
@@ -159,14 +167,17 @@ namespace Basket.API
                 .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Basket.API"))
                 .AddAspNetCoreInstrumentation()
                 .AddHttpClientInstrumentation()
+                .AddRebusInstrumentation()
                 .AddJaegerExporter());
+
         }
 
         private void ConfigureRebus(IServiceCollection services)
         {
             // Configure and register Rebus
             services.AddRebus(configure => configure
-                .Transport(t => t.UseRabbitMq(Configuration["RabbitMQConnectionString"], Configuration["RabbitMQInputQueueName"])));
+                .Transport(t => t.UseRabbitMq(Configuration["RabbitMQConnectionString"], Configuration["RabbitMQInputQueueName"]))
+                .Options(o => o.EnableDiagnosticSources())); // This is the important line
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
