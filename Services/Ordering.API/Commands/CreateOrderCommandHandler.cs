@@ -13,6 +13,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Serilog;
+using System.Diagnostics;
 
 namespace Ordering.Commands
 {
@@ -111,7 +112,16 @@ namespace Ordering.Commands
 
             try
             {
-                Order newOrder = await this._orderRepository.CreateOrUpdate(order);
+                Order newOrder = null;
+                using (var activitySource = new ActivitySource("Ordering.API"))
+                {
+                    using(var activity = activitySource.StartActivity("ActivityName"))
+                    {
+                        newOrder = await this._orderRepository.CreateOrUpdate(order);
+                        activity?.SetTag("Customer.Id", order.CustomerId);
+                        activity?.SetTag("Order.Id", order.Id);
+                    }
+                }
 
                 string notificationText = $"New order placed successfully: {newOrder.Id}";
 
