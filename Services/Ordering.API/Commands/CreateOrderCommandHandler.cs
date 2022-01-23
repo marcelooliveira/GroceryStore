@@ -115,7 +115,7 @@ namespace Ordering.Commands
                 Order newOrder = null;
                 using (var activitySource = new ActivitySource("Ordering.API"))
                 {
-                    using(var activity = activitySource.StartActivity("ActivityName"))
+                    using(var activity = activitySource.StartActivity("NewOrder"))
                     {
                         newOrder = await this._orderRepository.CreateOrUpdate(order);
                         activity?.SetTag("Customer.Id", order.CustomerId);

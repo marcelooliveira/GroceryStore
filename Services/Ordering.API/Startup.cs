@@ -21,6 +21,8 @@ using Ordering.Commands;
 using Ordering.Repositories;
 using RabbitMQ.Client;
 using Rebus.Config;
+using Rebus.OpenTelemetry.Configuration;
+using Rebus.Routing.TypeBased;
 using Rebus.ServiceProvider;
 using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
@@ -166,31 +168,23 @@ namespace Ordering
                 .AddAspNetCoreInstrumentation()
                 .AddHttpClientInstrumentation()
                 .AddSqlClientInstrumentation()
-                //.AddRebusInstrumentation()
+                .AddRebusInstrumentation()
                 .AddJaegerExporter());
         }
 
         private void RegisterRebus(IServiceCollection services)
         {
-            services.AutoRegisterHandlersFromAssemblyOf<CheckoutEventHandler>();
-
             // Configure and register Rebus
             services.AddRebus(configure => configure
-                .Logging(l => l.Use(new MSLoggerFactoryAdapter(_loggerFactory)))
-                .Transport(t => t.UseRabbitMq(Configuration["RabbitMQConnectionString"], Configuration["RabbitMQInputQueueName"])))
-                .AddTransient<DbContext, ApplicationContext>()
-                .AutoRegisterHandlersFromAssemblyOf<CheckoutEvent>();
+                    .Transport(t => t.UseRabbitMq(Configuration["RabbitMQConnectionString"], Configuration["RabbitMQInputQueueName"]))
+                    .Options(o => o.EnableDiagnosticSources()) // This is the important line
+                    );
+            services.AutoRegisterHandlersFromAssemblyOf<CheckoutEventHandler>();
         }
 
         public void Configure(IServiceProvider serviceProvider, IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddSerilog();
-
-            app.ApplicationServices.UseRebus(
-                async (bus) =>
-                {
-                    await bus.Subscribe<CheckoutEvent>();
-                }); 
 
             if (env.IsDevelopment())
             {
@@ -225,6 +219,12 @@ namespace Ordering
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
+
+            app.ApplicationServices.UseRebus(
+                async (bus) =>
+                {
+                    await bus.Subscribe<CheckoutEvent>();
+                });
         }
     }
 }
