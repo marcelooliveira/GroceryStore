@@ -36,7 +36,7 @@ namespace Ordering
 
         public Startup(ILoggerFactory loggerFactory,
             IConfiguration configuration,
-            Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
+            IWebHostEnvironment environment)
         {
 
             Configuration = configuration;
@@ -186,7 +186,7 @@ namespace Ordering
         {
             loggerFactory.AddSerilog();
 
-            app.UseRebus(
+            app.ApplicationServices.UseRebus(
                 async (bus) =>
                 {
                     await bus.Subscribe<CheckoutEvent>();
