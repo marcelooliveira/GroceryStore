@@ -274,7 +274,7 @@ namespace MVC
                     Console.WriteLine("==================================");
                     Console.WriteLine("Polly CircuitBreaker: ON HALF OPEN");
                     Console.WriteLine("==================================");
-                    Console.WriteLine("O circuito Polly.CircuitBreaker estava FECHADO e mudou para o estado SEMIABERTO e está aceitando novas requisições.", ConsoleColor.Yellow);
+                    Console.WriteLine("O circuito Polly.CircuitBreaker estava ABERTO e mudou para o estado SEMIABERTO e está aceitando novas requisições.", ConsoleColor.Yellow);
                     Console.WriteLine("");
                     Console.WriteLine();
                 });
