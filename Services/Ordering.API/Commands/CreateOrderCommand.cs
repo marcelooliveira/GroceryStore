@@ -15,8 +15,9 @@ namespace Ordering.Commands
 
         }
 
-        public CreateOrderCommand(List<CreateOrderCommandItem> items, string customerId, string customerName, string customerEmail, string customerPhone, string customerAddress, string customerAdditionalCustomer, string customerDistrict, string customerCity, string customerState, string customerZipCode)
+        public CreateOrderCommand(Guid idempotencyId, List<CreateOrderCommandItem> items, string customerId, string customerName, string customerEmail, string customerPhone, string customerAddress, string customerAdditionalCustomer, string customerDistrict, string customerCity, string customerState, string customerZipCode)
         {
+            IdempotencyId = idempotencyId;
             Items = items;
             CustomerId = customerId;
             CustomerName = customerName;
@@ -30,6 +31,7 @@ namespace Ordering.Commands
             CustomerZipCode = customerZipCode;
         }
 
+        public Guid IdempotencyId { get; set; } = Guid.Empty;
         public List<CreateOrderCommandItem> Items { get; private set; } = new List<CreateOrderCommandItem>();
         public string CustomerId { get; set; } = "";
         public string CustomerName { get; set; } = "";

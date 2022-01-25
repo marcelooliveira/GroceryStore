@@ -170,6 +170,8 @@ namespace Ordering
                 .AddSqlClientInstrumentation()
                 .AddRebusInstrumentation()
                 .AddJaegerExporter());
+
+            services.AddDistributedMemoryCache();
         }
 
         private void RegisterRebus(IServiceCollection services)

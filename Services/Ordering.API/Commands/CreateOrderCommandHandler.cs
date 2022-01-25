@@ -14,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Serilog;
 using System.Diagnostics;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Ordering.Commands
 {
@@ -25,6 +26,7 @@ namespace Ordering.Commands
         private readonly ILogger<CreateOrderCommandHandler> _logger;
         private readonly IBus _bus;
         private readonly IConfiguration _configuration;
+        private readonly IDistributedCache _cache;
         private readonly HubConnection _connection;
 
         public CreateOrderCommandHandler(
@@ -32,13 +34,14 @@ namespace Ordering.Commands
             , IOrderRepository orderRepository
             , IBus bus
             , IConfiguration configuration
+            , IDistributedCache cache
             )
         {
             this._orderRepository = orderRepository;
             this._logger = logger;
             this._bus = bus;
             this._configuration = configuration;
-
+            this._cache = cache;
             string userCounterDataHubUrl = $"{_configuration["SignalRServerUrl"]}usercounterdatahub";
 
             this._connection = new HubConnectionBuilder()
@@ -60,6 +63,17 @@ namespace Ordering.Commands
 
             var cmd = request.Command;
             var guid = request.Id;
+
+            if (!string.IsNullOrWhiteSpace
+                (await this._cache.GetStringAsync(
+                    cmd.IdempotencyId.ToString())))
+            {
+                return true;
+            }
+
+            await this._cache.SetStringAsync(
+                    cmd.IdempotencyId.ToString(), 
+                    DateTime.Now.ToString());
 
             if (cmd == null)
                 throw new ArgumentNullException("Command cannot be empty");

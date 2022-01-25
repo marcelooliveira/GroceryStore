@@ -21,7 +21,7 @@ namespace Messages.EventHandling
                     i => new CreateOrderCommandItem(i.ProductId, i.ProductName, i.Quantity, i.UnitPrice)
                 ).ToList();
 
-            var command = new CreateOrderCommand(items, message.UserId, message.UserName, message.Email, message.Phone, message.Address, message.AdditionalAddress, message.District, message.City, message.State, message.ZipCode);
+            var command = new CreateOrderCommand(message.RequestId, items, message.UserId, message.UserName, message.Email, message.Phone, message.Address, message.AdditionalAddress, message.District, message.City, message.State, message.ZipCode);
             return command;
         }
     }
