@@ -10,32 +10,26 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Models.ViewModels;
 using MVC.Commands;
 using MVC.Model.Redis;
 using MVC.SignalR;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Polly;
 using Polly.Extensions.Http;
 using Serilog;
 using Services;
 using StackExchange.Redis;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Jaeger;
-using Jaeger.Samplers;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 
 namespace MVC
 {
@@ -143,41 +137,6 @@ namespace MVC
                             {
                                 throw new Exception();
                             }
-
-                            //// Get a list of all claims attached to the UserInformationRecieved context
-                            //var ctxClaims = context.User.Children().ToList();
-
-                            //foreach (var ctxClaim in ctxClaims)
-                            //{
-                            //    var claimType = ctxClaim.Path;
-                            //    var token = ctxClaim.FirstOrDefault();
-                            //    if (token == null)
-                            //    {
-                            //        continue;
-                            //    }
-
-                            //    var claims = new List<Claim>();
-                            //    if (token.Children().Any())
-                            //    {
-                            //        claims.AddRange(
-                            //            token.Children()
-                            //                .Select(c => new Claim(claimType, c.Value<string>())));
-                            //    }
-                            //    else
-                            //    {
-                            //        claims.Add(new Claim(claimType, token.Value<string>()));
-                            //    }
-
-                            //    foreach (var claim in claims)
-                            //    {
-                            //        if (!claimsId.Claims.Any(
-                            //            c => c.Type == claim.Type &&
-                            //                 c.Value == claim.Value))
-                            //        {
-                            //            claimsId.AddClaim(claim);
-                            //        }
-                            //    }
-                            //}
 
                             return Task.CompletedTask;
                         }
@@ -289,7 +248,7 @@ namespace MVC
         {
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
-                .CircuitBreakerAsync(5, TimeSpan.FromSeconds(30));
+                .CircuitBreakerAsync(5, TimeSpan.FromSeconds(10));
         }
     }
 }
