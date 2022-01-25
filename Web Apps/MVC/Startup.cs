@@ -248,7 +248,36 @@ namespace MVC
         {
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
-                .CircuitBreakerAsync(5, TimeSpan.FromSeconds(10));
+                .CircuitBreakerAsync(5, TimeSpan.FromSeconds(60),
+                onBreak: (a,b) =>
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("==============================", ConsoleColor.Red);
+                    Console.WriteLine("Polly CircuitBreaker: ON BREAK", ConsoleColor.Red);
+                    Console.WriteLine("==============================", ConsoleColor.Red);
+                    Console.WriteLine("O circuito Polly.CircuitBreaker estava FECHADO e mudou para o estado ABERTO.", ConsoleColor.Red);
+                    Console.WriteLine();
+                },
+                onReset: () =>
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("===============================");
+                    Console.WriteLine("Polly CircuitBreaker: ON RESET");
+                    Console.WriteLine("===============================");
+                    Console.WriteLine("O circuito Polly.CircuitBreaker estava ABERTO e mudou para o estado FECHADO.", ConsoleColor.Green);
+                    Console.WriteLine("");
+                    Console.WriteLine();
+                },
+                onHalfOpen: () =>
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("==================================");
+                    Console.WriteLine("Polly CircuitBreaker: ON HALF OPEN");
+                    Console.WriteLine("==================================");
+                    Console.WriteLine("O circuito Polly.CircuitBreaker estava FECHADO e mudou para o estado SEMIABERTO e está aceitando novas requisições.", ConsoleColor.Yellow);
+                    Console.WriteLine("");
+                    Console.WriteLine();
+                });
         }
     }
 }
