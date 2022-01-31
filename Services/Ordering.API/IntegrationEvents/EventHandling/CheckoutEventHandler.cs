@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace Messages.EventHandling
 {
+    /// <image src="$(ProjectDir)\eb.png"/>
     public class CheckoutEventHandler : BaseEventHandler<CheckoutEvent, CreateOrderCommand>, IHandleMessages<CheckoutEvent>
     {
         public CheckoutEventHandler(IMediator mediator, ILogger<CheckoutEventHandler> logger)

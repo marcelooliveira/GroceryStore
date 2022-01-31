@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace Messages.Events
 {
+    /// <image src="$(ProjectDir)\ed.png"/>
     public class CheckoutEvent : IntegrationEvent
     {
         public CheckoutEvent()
